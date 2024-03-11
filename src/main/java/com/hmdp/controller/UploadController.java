@@ -44,6 +44,8 @@ public class UploadController {
         return Result.ok();
     }
 
+
+    //
     private String createNewFileName(String originalFilename) {
         // 获取后缀
         String suffix = StrUtil.subAfter(originalFilename, ".", true);

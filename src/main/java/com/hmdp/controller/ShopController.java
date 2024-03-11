@@ -34,8 +34,7 @@ public class ShopController {
         return shopService.queryById(id);
     }
 
-    /**111111
- 1    * 新增商铺信息
+    /*** 新增商铺信息
      * @param shop 商铺数据
      * @return 商铺id
      */
@@ -56,8 +55,10 @@ public class ShopController {
    @PutMapping
     public Result updateShop(@RequestBody Shop shop) {
         // 写入数据库
-        shopService.updateById(shop);
-        return Result.ok();
+//        shopService.updateById(shop);
+//        return Result.ok();
+       return shopService.update(shop);
+
     }
 
     /**
