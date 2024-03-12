@@ -88,12 +88,10 @@ public class UserController {
         // 返回
         return Result.ok(info);
     }
-/*
-* 共同关注
-*
-* */
+
     @GetMapping("/{id}")
     public Result queryUserById(@PathVariable("id")Long userId){
+        //查询用户
         User user = userService.getById(userId);
         if (user==null){
             return Result.ok();
