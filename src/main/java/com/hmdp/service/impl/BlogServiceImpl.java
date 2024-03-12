@@ -193,8 +193,13 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
         //将id列表转换为字符串
         String idStr = StrUtil.join(",", ids);
         List<Blog> blogs = query().in("id", ids).last("ORDER BY FIRLD(id," + idStr + ")").list();
-        blogs.forEach(this::isBlogLiked);
+//        blogs.forEach(this::isBlogLiked);
+        for (Blog blog : blogs) {
+            queryBlogUser(blog);
+            isBlogLiked(blog);
+        }
         //封装 返回
+
         ScrollResult scrollResult = new ScrollResult();
         scrollResult.setList(blogs);
         scrollResult.setOffset(os);
