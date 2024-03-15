@@ -65,33 +65,36 @@ public class RedisTest {
 
     @Test
     public void testLoadShopData() {
-        //查询店铺信息
+
+//        1.查询店铺信息
         List<Shop> list = shopService.list();
-        //分组
-        Map<Long, List<Shop>> map = list.stream().collect(Collectors.groupingBy(Shop::getTypeId));
-        //分批写入
-        for (Map.Entry<Long, List<Shop>> longListEntry : map.entrySet()) {
-            //获取类型id
-            Long typeId = longListEntry.getKey();
-            //获取店铺集合
-            List<Shop> value = longListEntry.getValue();
-            List<RedisGeoCommands.GeoLocation<String>> locations=new ArrayList<>(value.size());
-            //写入redis
-            String key = SHOP_GEO_KEY + typeId;
-            /*for (Shop shop : value) {
-                Double x = shop.getX();
-                Double y = shop.getY();
-                stringRedisTemplate.opsForGeo()
-                        .add(key
-                                , new Point(x, y)
-                                , shop.getId().toString());
-            }*/
+        //2.店铺分组，按照typeid分组为同一个集合,集合元素为shop，使用stream流
+        Map<Long,List<Shop>> map = list.stream().collect(Collectors.groupingBy(Shop::getTypeId));
+        //3.分批写入redis,先遍历set,按typeid来写入，
+        for (Map.Entry<Long, List<Shop>> entry : map.entrySet()) {
+
+//            3.1获取类型id
+            Long typeId = entry.getKey();
+            String key ="shop:geo:"+typeId;
+
+            //3.2获取同类型店铺的集合
+            List<Shop> value = entry.getValue();
+
+            //3.3写入redis GEOADD key 经度 维度 member,这种写法效率太低
+//            for (Shop shop : value) {
+//                stringRedisTemplate.opsForGeo().add(key,new Point(shop.getX(),shop.getY()),shop.getId().toString());
+//            }
+//            3.3先丢入locations集合中，再写入redis
+            List<RedisGeoCommands.GeoLocation<String >> locations = new ArrayList<>(value.size());
             for (Shop shop : value) {
                 locations.add(new RedisGeoCommands.GeoLocation<>(shop.getId().toString(),new Point(shop.getX(),shop.getY())));
+
             }
             stringRedisTemplate.opsForGeo().add(key,locations);
         }
+
     }
+
 
     @Test
     public void testHyperLogLog(){

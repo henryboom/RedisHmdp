@@ -5,13 +5,13 @@ spring:
     name: hmdp
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3308/hmdp?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/hmdp?useSSL=false&serverTimezone=UTC
     username: root
-    password: root
+    password: rstyly@gg
   redis:
-    host: localhost
+    host: battle.wicp.io
     port: 6379
-    password: 123456
+    password: rstyly@gg
     lettuce:
       pool:
         max-active: 10
